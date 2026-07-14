@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Convert international currencies instantly with our premium Currency Converter. View real-time exchange rates, filter search options, and analyze historical currency trends.">
+  <meta name="keywords" content="currency converter, exchange rate, foreign exchange, forex, USD, EUR, INR, GBP">
+  <meta name="author" content="Antigravity Dev">
+  <title>AeroRate | Premium Currency Converter & Real-Time Exchange rates</title>
+  
+  <!-- Styling Sheets -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <div class="logo-icon-wrapper">
+          <i class="fa-solid fa-coins"></i>
+        </div>
+        <div class="logo-text">
+          <h1>AeroRate</h1>
+          <span>Global Currency Hub</span>
+        </div>
+      </div>
+      
+      <!-- Theme Switcher -->
+      <div class="theme-switch-wrapper">
+        <input type="checkbox" id="theme-toggle">
+        <label for="theme-toggle" class="theme-switch-label" id="theme-toggle-label" aria-label="Toggle dark/light theme">
+          <i class="fas fa-sun" aria-hidden="true"></i>
+          <i class="fas fa-moon" aria-hidden="true"></i>
+          <div class="theme-ball"></div>
+        </label>
+      </div>
+    </header>
+
+    <!-- Dashboard Main Grid -->
+    <main class="dashboard-grid">
+      
+      <!-- Left Panel: Converter Form -->
+      <section class="glass-panel converter-section" aria-labelledby="converter-title">
+        <h2 id="converter-title" style="display: none;">Currency Calculator</h2>
+        
+        <!-- Input Amount -->
+        <div class="input-group">
+          <label for="amount">
+            <i class="fa-solid fa-wallet"></i> Amount to Convert
+          </label>
+          <div class="amount-input-wrapper">
+            <span class="amount-symbol" id="amount-symbol">$</span>
+            <input type="number" id="amount" value="1000" min="0" step="any" placeholder="0.00" autocomplete="off" required>
+          </div>
+        </div>
+
+        <!-- Currencies Selection (From -> To) -->
+        <div class="currency-selector-row">
+          
+          <!-- From Currency Selector -->
+          <div class="selector-column">
+            <label id="from-label">From</label>
+            <div class="custom-select" id="from-currency-select" aria-labelledby="from-label">
+              <div class="select-trigger" id="from-select-trigger" tabindex="0">
+                <div class="selected-value">
+                  <img src="https://flagcdn.com/w40/us.png" alt="US Flag" class="currency-flag" id="from-flag">
+                  <span class="currency-code" id="from-code">USD</span>
+                  <span class="currency-name" id="from-name">United States Dollar</span>
+                </div>
+                <i class="fas fa-chevron-down trigger-arrow"></i>
+              </div>
+              <div class="select-options-container" id="from-options-container">
+                <div class="search-box">
+                  <i class="fas fa-search search-icon"></i>
+                  <input type="text" placeholder="Search currency..." class="search-input" id="from-search" autocomplete="off">
+                  <button class="clear-search" id="from-clear-search"><i class="fas fa-times"></i></button>
+                </div>
+                <ul class="select-options" id="from-options-list">
+                  <!-- JS Populated Option List -->
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Swap Button -->
+          <div class="swap-button-container">
+            <button class="swap-btn" id="swap-currencies-btn" title="Swap Currencies" aria-label="Swap source and target currencies">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            </button>
+          </div>
+
+          <!-- To Currency Selector -->
+          <div class="selector-column">
+            <label id="to-label">To</label>
+            <div class="custom-select" id="to-currency-select" aria-labelledby="to-label">
+              <div class="select-trigger" id="to-select-trigger" tabindex="0">
+                <div class="selected-value">
+                  <img src="https://flagcdn.com/w40/eu.png" alt="European Union Flag" class="currency-flag" id="to-flag">
+                  <span class="currency-code" id="to-code">EUR</span>
+                  <span class="currency-name" id="to-name">Euro</span>
+                </div>
+                <i class="fas fa-chevron-down trigger-arrow"></i>
+              </div>
+              <div class="select-options-container" id="to-options-container">
+                <div class="search-box">
+                  <i class="fas fa-search search-icon"></i>
+                  <input type="text" placeholder="Search currency..." class="search-input" id="to-search" autocomplete="off">
+                  <button class="clear-search" id="to-clear-search"><i class="fas fa-times"></i></button>
+                </div>
+                <ul class="select-options" id="to-options-list">
+                  <!-- JS Populated Option List -->
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Conversion Output Presentation -->
+        <div class="result-card-container">
+          <div class="result-card" id="conversion-result-card">
+            <span class="result-heading">Converted Value</span>
+            <div class="result-formula" id="conversion-formula">1,000 USD =</div>
+            <div class="result-value-row">
+              <span class="result-converted-value" id="converted-amount">---</span>
+              <span class="result-converted-code" id="converted-symbol">EUR</span>
+            </div>
+            <div class="exchange-rate-stat">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Mid-market rate: <strong id="exchange-rate-val">1 USD = 0.92 EUR</strong>. Updated <span class="updated-time-val" id="last-updated-val">---</span>.</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Panel: Data Trends & Comparisons -->
+      <section class="secondary-panels-container">
+        
+        <!-- Live Graph Card -->
+        <div class="glass-panel chart-panel">
+          <div class="chart-header">
+            <div class="chart-title">
+              <i class="fa-solid fa-chart-line"></i>
+              <span>Rate Trend (7 Days)</span>
+            </div>
+            <span class="chart-subtitle-span" id="chart-pair-label">USD / EUR</span>
+          </div>
+          
+          <div class="chart-canvas-wrapper">
+            <!-- Simulated Loading Indicator -->
+            <div class="skeleton-loader" id="chart-loader">
+              <div class="skeleton-spinner"></div>
+              <span class="skeleton-text">Generating trend details...</span>
+            </div>
+            <canvas id="rateTrendChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Quick rates Grid -->
+        <div class="glass-panel rates-panel">
+          <div class="rates-header">
+            <div class="rates-title">
+              <i class="fa-solid fa-table-list"></i>
+              <span>Popular Conversions</span>
+            </div>
+            <span class="chart-subtitle-span" id="base-reference-label">Based on 1 USD</span>
+          </div>
+          
+          <div class="rates-grid" id="popular-rates-container">
+            <!-- Dynamically Populated by JS -->
+          </div>
+        </div>
+
+      </section>
+      
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-badge">
+          <span class="dot"></span>
+          <span>Rates are Live</span>
+        </div>
+        <p class="footer-info">
+          Powered by public exchange rates. Core built with HTML5, CSS3 & JS.
+        </p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Main JavaScript Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
